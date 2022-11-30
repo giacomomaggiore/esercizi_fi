@@ -19,6 +19,8 @@ per l’allocazione e la deallocazione di matrici dinamiche di float.
 
 #include <stdio.h>
 #include <stdlib.h>
+#include<unistd.h>
+
 
 
 
@@ -83,7 +85,7 @@ double ** alloca_matrice(int righe, int colonne){
 
 	p = malloc(sizeof(double *)*righe);
 	if(p){ 
-		for (i = 0; i < colonne; i++){
+		for (i = 0; i < righe; i++){
 			*(p+i) = malloc(sizeof(double)*colonne);
 		}
 		printf("Matrice allocata con %d righe e %d colonne!\n", righe, colonne);
@@ -98,13 +100,24 @@ double ** alloca_matrice(int righe, int colonne){
 double **prodotto(double *vett1, double *vett2, int righe, int colonne, double **matrice){
 	int i;
 	int j;
+	double somma;
 
-	printf("Sto calcolando i prodotti\n");
+	printf("Sto calcolando i prodotti... \n");
+	sleep(1.5);
+	printf("...\n");
+	sleep(1.5);
+	printf("...\n");
+	sleep(1.5);
+	printf("...\n");
+	sleep(1.5);
+	printf("...\n");
+
 
 	for(i = 0; i < righe; i++){
 		for (j = 0; j < colonne; j++){
-			printf("Prodotto tra riga %d e colonna %d\n", i+1, j+1);
-			*(*(matrice+i)+j) = *(vett1+i) +  (*(vett2+j));
+			somma = *(vett1+i) *  (*(vett2+j));
+
+			*(*(matrice+i)+j) = somma;
 		}
 	}
 	 
@@ -113,11 +126,13 @@ void stampa_matrice(double **matrice, int righe, int colonne){
 	int i;
 	int j;
 	for (i = 0; i < righe; i++){
+
 		for(j = 0; j < colonne; j++){ 
-			printf("%lf ", *(*matrice+i)+j);
+			printf("%.2lf ", *(*(matrice+i)+j));
 		}
+			printf("\n");
+
 	}
-	printf("/n");
 
 }
 
@@ -165,5 +180,7 @@ int main(){
 	matrice = alloca_matrice(dimensione1, dimensione2);
 
 	prodotto(vett1, vett2, dimensione1, dimensione2, matrice);
+
+	printf("MATRICE PRODOTTO:\n");
 	stampa_matrice(matrice, dimensione1, dimensione2);
 }
