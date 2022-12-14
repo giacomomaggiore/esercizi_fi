@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
 typedef struct{
@@ -47,14 +48,12 @@ annuncio * inserisci_coda(annuncio *l, int id, int tipo, double prezzo){
 
 
 void visualizza(annuncio *l){
-	printf("VISUALIZZAZIONE DELLA LISTA IN ORDINE CRONOLOGICO \n");
 	while(l != NULL){
 		printf("Id: %d\n", l->id);
 		l = l->next;
 	}
 }
 void visualizza_prezzi(annuncio *l){
-	printf("VISUALIZZAZIONE DELLA LISTA IN ORDINE CRESCENTE DI PREZZO\n");
 
 	while(l != NULL){
 		printf("Id: %d Prezzo: %f\n",l->id, l->prezzo);
@@ -158,16 +157,24 @@ annuncio *inserisci_prezzo_crescente(annuncio *l, int id, int tipo, double prezz
 
 	
 }
+
 void leggi_binario(FILE *file){
+	struct myStruct{ 
+	int id;
+	char data[20];
+	int tipo;
+	double prezzo; 
+	};
+
+	struct myStruct annuncio_scrivere;
+
 	file = fopen("annunci.bin", "rb");
-	annuncio temporaneo;
 
 
 
 	do{
-		printf("sono nel do while1\n");
-		fread(&temporaneo, sizeof(annuncio), 1, file);
-		printf("%d %f\n", temporaneo.id, temporaneo.prezzo);
+		fread(&annuncio_scrivere, sizeof(annuncio_scrivere), 1, file);
+		printf("%d %f\n", annuncio_scrivere.id, annuncio_scrivere.prezzo);
 
 	}while(!feof(file));
 
@@ -175,52 +182,128 @@ void leggi_binario(FILE *file){
 	fclose(file);
 }
 
+annuncio *rimuovi(annuncio *l, int id){
+	annuncio *prec1;
+	annuncio *prec2;
+	annuncio *temp;
+	if(l == NULL){
+		printf("Lista vuota!\n");
+	}
+
+	else if(l->id == id){
+			temp = l;
+			l = l->next;
+			free(temp);
+	}
+	else{
+		prec1 = l;
+		prec2 = l->next;
+		while (prec2 != NULL){
+			if (prec2->id == id){
+				printf("Trovato\n");
+				prec1->next = prec2->next;
+				free(prec2);
+			}
+			prec1 = prec1->next;
+			prec2 = prec2->next;
+		}
+	}
+
+	return l;
+}
+
 
 FILE *scrivi_binario(FILE *file, annuncio *l){
+
+	
+	struct myStruct{ 
+	int id;
+	char data[20];
+	int tipo;
+	double prezzo; };
+
+	struct myStruct annuncio_scrivere;
+
 	file = fopen("annunci.bin", "wb");
 
 
 
 	while (l != NULL){
-		fwrite(&l, sizeof(annuncio), 1, file);
+		annuncio_scrivere.id = (l->id);
+		annuncio_scrivere.tipo = l->tipo;
+		annuncio_scrivere.prezzo = l->prezzo;
+		strcpy(annuncio_scrivere.data, l->data);
+
+
+
+		fwrite(&annuncio_scrivere, sizeof(annuncio_scrivere), 1, file);
 		l = l->next;
 	}
 
 	fclose(file);
 }
 
-
 int main(){
+	int id;
+	int tipo;
+	double prezzo;
+	char data[20];
 	annuncio *l = NULL; //recente
 	annuncio *p = NULL; //prezzo
 	FILE *fid;
+	int scelta;
+
+
+	l = inserisci_coda(l, 1, 23, 30.0);
+	l = inserisci_coda(l, 3, 23, 31.0);
+	l = inserisci_coda(l, 2, 23, 34.0);
+
+	p = inserisci_coda(p, 1, 23, 30.0);
+	p = inserisci_coda(p, 3, 23, 31.0);
+	p = inserisci_coda(p, 2, 23, 34.0);
+
+	printf("Benvenuto!\n\n\n");
+
+	do{ 
+	printf("1 - VISUALIZZA ELENCO\n2 - VISUALIZZA ELENCO IN ORDINE DI PREZZO\n3 - AGGIUNGI ANNUNCIO\n4 - RIMUOVI ANNUNCIO\n0 - ESCI\n");
+	scanf("%d", &scelta);
+
+	if(scelta == 1){
+		printf("Ecco la lista in ordine cronologico:\n");
+		visualizza(l);
+	}
+	else if (scelta == 2){
+		printf("Ecco la lista in ordine di prezzo:\n");
+		visualizza(p);
+	}
+	else if(scelta == 3){
+
+		printf("\nInserire Id annuncio: ");
+		scanf("%d", &id);
+		printf("\nInserire il tipo di annuncio: ");
+		scanf("%d", &tipo);
+		printf("\nInserire il prezzo: ");
+		scanf("%lf", &prezzo);
+		printf("\nInserire la data: ");
+		scanf("%s", data);	
+
+	l = inserisci_coda(l, id, tipo, prezzo);
+	p = inserisci_prezzo_crescente(p, id, tipo, prezzo);
+	}
+	else if(scelta == 4){
+		printf("Inserisci l'Id dell'elemento da rimuovere: ");
+		scanf("%d", &id);
+
+		l = rimuovi(l, id);
+		p = rimuovi(p, id);
+	}
+
+
+
+	}while(scelta != 0);
+
+
+
+
 	
-
-
-
-
-	l = inserisci_coda(l, 1, 1, 14.3);
-	l = inserisci_coda(l, 2, 1, 11.3);
-	l = inserisci_coda(l, 3, 1, 10.3);
-	l = inserisci_dopo(l, 1, 54, 1, 0.2);
-	//visualizza(l);
-	//printf("\n\n\n");
-
-	p = inserisci_prezzo_crescente(p, 1, 1, 32.0);
-
-	p = inserisci_prezzo_crescente(p, 2, 1, 22.0);
-
-	
-	p = inserisci_prezzo_crescente(p, 3, 1, 2.0);
-
-	
-	p = inserisci_prezzo_crescente(p, 4, 1, 52.0);
-
-
-	p = inserisci_prezzo_crescente(p, 4, 1, 5.0);
-
-	visualizza_prezzi(p);
-	scrivi_binario(fid, p);
-	leggi_binario(fid);
-
 }
