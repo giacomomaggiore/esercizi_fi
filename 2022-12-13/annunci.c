@@ -60,7 +60,14 @@ void visualizza_prezzi(annuncio *l){
 		l = l->next;
 	}
 }
-
+int conta_annunci(annuncio *l){
+	int counter = 0;
+	while(l != NULL){
+		counter = counter + 1;
+		l = l->next;
+	}
+	return counter;
+}
 
 int cerca_massimo_prezzo(annuncio *l){
 	double massimo = 0;
@@ -265,7 +272,7 @@ int main(){
 	printf("Benvenuto!\n\n\n");
 
 	do{ 
-	printf("1 - VISUALIZZA ELENCO\n2 - VISUALIZZA ELENCO IN ORDINE DI PREZZO\n3 - AGGIUNGI ANNUNCIO\n4 - RIMUOVI ANNUNCIO\n0 - ESCI\n");
+	printf("1 - VISUALIZZA ELENCO\n2 - VISUALIZZA ELENCO IN ORDINE DI PREZZO\n3 - AGGIUNGI ANNUNCIO\n4 - RIMUOVI ANNUNCIO\n5 - CONTA ANUNCI\n0 - ESCI\n");
 	scanf("%d", &scelta);
 
 	if(scelta == 1){
@@ -296,6 +303,9 @@ int main(){
 
 		l = rimuovi(l, id);
 		p = rimuovi(p, id);
+	}
+	else if(scelta == 5){
+		printf("\nSono presenti %d annunci.\n", conta_annunci(l));
 	}
 
 
