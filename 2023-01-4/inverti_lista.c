@@ -85,7 +85,7 @@ lista* inserisci_testa(lista *l, int num){
         l = temp;
         
     }
-    printf("Aggiunto elemento %d\n", temp->num);
+    //printf("Aggiunto elemento %d\n", temp->num);
     
     return l;
 }
@@ -93,22 +93,54 @@ lista* inserisci_testa(lista *l, int num){
 void visualizza(lista *l){
     printf("Visualizzazione Lista:\n");
     while(l != NULL){
-        printf("%d\n", l->num);
+        
+        printf("%d - ", l->num);
         l = l->next;
     }
+}
+
+lista *testaCoda(lista *l){
+    lista *prec1;
+    lista *prec2;
+
+
+    if(l->next == NULL){
+        return l;
+    }
+    else{
+        prec1 = l;
+        prec2 = l->next;
+
+        while(prec2->next != NULL){
+            prec1 = prec1->next;
+            prec2 = prec2->next;
+        }
+
+        prec1->next = NULL;
+        prec2->next = l;
+        l = prec2;
+    }
+    return l;
+
 }
 
 
 int main(){
     lista *l = NULL;;
     lista *nuova = NULL;
-    l = inserisci_testa(l, 1);
+    l = inserisci_testa(l, 5);
     l = inserisci_testa(l, 2);
     l = inserisci_testa(l, 3);
+    l = inserisci_testa(l, 2);
+    l = inserisci_testa(l, 4);
     
     visualizza(l);
-    nuova = inverti(l);
-    visualizza(nuova);
+
+    l = testaCoda(l);
+
+    visualizza(l);
+
+    //visualizza(nuova);
 
     
     
