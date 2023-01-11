@@ -8,9 +8,11 @@ typedef struct nodo{
 
 int conta_elementi(lista *l){
     int i = 0;
+
     while(l != NULL){
+        i++;
         l = l->next;
-        i = i + 1;
+        
     }
     return i;
 }
@@ -23,32 +25,40 @@ lista *inverti(lista* l){
     lista *prec;
     int i = 0;
     
-    len = conta_elementi(l);
+    len = 3;
     printf("len: %d\n", len);
     
-    vettore = (int*) malloc (len * sizeof(int));
+    vettore = malloc(sizeof(int)*len);
+
+    
     if(vettore){
             prec = l;
-            printf("Primo :%d\n", prec->next->num);
-
-            for(prec = l; prec!= NULL; prec = prec->next){
-                printf("--%d ", prec->num);
+            for(prec = l; prec != NULL; prec = prec->next){
+                *(vettore+i) = prec->num;
+                i++;
             }
             
-            
-            printf("ciao");
+            printf("\n");
             
             temp = malloc(sizeof(lista));
+            
+            printf("Mumeri interi:");
+            for(i = 0; i < len; i++){
+                printf("%d ", *(vettore+i));
+            }
+
+            //INSERIMENTO ULTIMO ELEMENTO DEL VETTORE
             if(temp){
-                temp->num = *(vettore+i);
+                temp->num = *(vettore+len-1);
+                printf("Aggiunto elemento %d \n", temp->num);
                 temp->next = NULL;
                 i--;
-                l = temp;
+                nuova = temp;
             }
             
             
             
-            for(i = len-1 ;i >= 0; i--){
+            for(i = len-2;i >= 0; i--){
                 temp = malloc(sizeof(lista));
                 if(temp){
                     temp->num = *(vettore+i);
@@ -57,10 +67,12 @@ lista *inverti(lista* l){
                 for(prec = nuova; prec->next !=NULL; prec = prec->next);
                 prec->next = temp;
             }
+            
         }
                 
                 
-        return nuova;
+        
+    return nuova;
     
 }
 
@@ -79,12 +91,10 @@ lista* inserisci_testa(lista *l, int num){
 }
 
 void visualizza(lista *l){
-    lista *prec;
-    prec = l;
     printf("Visualizzazione Lista:\n");
-    while(prec != NULL){
-        printf("%d\n", prec->num);
-        prec = prec->next;
+    while(l != NULL){
+        printf("%d\n", l->num);
+        l = l->next;
     }
 }
 
@@ -98,7 +108,7 @@ int main(){
     
     visualizza(l);
     nuova = inverti(l);
-    //visualizza(new);
+    visualizza(nuova);
 
     
     
